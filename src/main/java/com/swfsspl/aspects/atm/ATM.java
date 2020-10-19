@@ -10,9 +10,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class ATM implements ApplicationListener<ApplicationReadyEvent> {
@@ -62,15 +67,27 @@ public class ATM implements ApplicationListener<ApplicationReadyEvent> {
             System.out.println();
         } while (!fin);
         printLog(bank);
+        printAuditFile(bank);
 
         System.out.println("Gracias por usar el programa.");
     }
 
+    private void printAuditFile(Bank bank) {
+        String content = bank.getAuditLogs().stream().collect(Collectors.joining("\n"));
+        try {
+            Files.writeString(Paths.get("./auditLog.txt"), content, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     private void printLog(Bank bank) {
-        System.out.println("###############Inicio - Listado de operaciones###############");
+        System.out.println("############### Inicio - Listado de operaciones ###############");
         System.out.println();
         bank.getOperationLogs().stream().forEach(x -> System.out.println(x));
-        System.out.println("###############Fin - Listado de operaciones###############");
+        System.out.println("############### Fin - Listado de operaciones ###############");
     }
 
 

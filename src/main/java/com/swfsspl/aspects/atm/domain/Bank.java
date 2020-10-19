@@ -16,6 +16,7 @@ public class Bank {
 
     private Map<String, Account> accounts = new HashMap<>();
     private List<String> operationLogs = new ArrayList<>();
+    private List<String> auditLogs = new ArrayList<>();
 
     public Bank() {
     }
